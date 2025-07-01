@@ -23,16 +23,19 @@ A comprehensive web-based parking garage management system built with Flask, Mon
 ## Project Structure
 
 ```
-parking-garage/
-├── app.py              # Main Flask application
-├── models.py           # Database models and enums
-├── services.py         # Business logic layer
-├── static/
-│   └── js/
-│       └── scripts.js  # Frontend JavaScript
+SmartParkingGarageSystem/
+├── app.py                # Main application
+├── models.py             # Data models
+├── services.py           # Business logic
 └── templates/
-    ├── index.html      # Main dashboard
-    └── floor.html      # Floor visualization
+│   ├── index.html      # Main dashboard
+│   └── floor.html      # Floor visualization
+├── static/
+│   ├── script.js         # Frontend logic
+│   └── styles.css        # Custom styles
+│   └── favicon.ico
+└── requirements.txt
+└── README.md
 ```
 
 ## Installation & Setup
