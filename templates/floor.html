@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Floor {{ floor.floor_number }} Visualization</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .bay {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .bay-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .spots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .spot {
+            height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            font-weight: bold;
+            padding: 8px;
+            position: relative;
+        }
+        .available {
+            background-color: #d4edda;
+            border: 2px solid #c3e6cb;
+        }
+        .occupied {
+            background-color: #f8d7da;
+            border: 2px solid #f5c6cb;
+        }
+        .spot-id {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .spot-info {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+        }
+        .license-plate {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+            word-break: break-all;
+        }
+        .car-size {
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+            font-size: 11px;
+        }
+        .size-mismatch {
+            background-color: #ffcccc;
+            border: 1px solid #ff0000;
+        }
+        .mismatch-warning {
+            color: #ff0000;
+            font-size: 10px;
+        }
+        .duration {
+            color: #666;
+            font-size: 11px;
+        }
+        .spot-type {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        .spot-size {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 10px;
+            background-color: rgba(0,0,0,0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <!--<a href="/" class="btn btn-secondary mb-3">← Back to Dashboard</a>-->
+        <h1 class="mb-4">Floor {{ floor.floor_number }} Visualization</h1>
+
+        <div class="alert alert-info mb-4">
+            <strong>Spot Types:</strong>
+            <span class="badge bg-primary">Compact</span> (Small cars only) |
+            <span class="badge bg-primary">Standard</span> (Small/Medium) |
+            <span class="badge bg-primary">Oversized</span> (All sizes) |
+            <span class="badge bg-primary">EV</span> (Small/Medium)
+        </div>
+
+        {% for bay in floor.bays %}
+        <div class="bay">
+            <div class="bay-title d-flex justify-content-between align-items-center">
+                <span>Bay {{ bay.bay_id }}</span>
+                <span class="badge bg-secondary">{{ bay.spots|length }} spots</span>
+            </div>
+            <div class="spots-container">
+                {% for spot in bay.spots %}
+                <div class="spot {% if spot.status == 'available' %}available{% else %}occupied{% endif %}">
+                    <div class="spot-type">{{ spot.type|upper }}</div>
+                    <div class="spot-id">Spot {{ spot.spot_id.split('-')[2] }}</div>
+
+                    {% if spot.status == 'occupied' %}
+                        {% set spot_data = occupied_spots.get(spot.spot_id) %}
+                        <div class="spot-info">
+                            <div class="license-plate">
+                                {{ spot_data.license_plate if spot_data else 'Unknown' }}
+                            </div>
+                            <div class="car-size {% if spot_data and spot_data.car_size not in ['small'] and spot.type == 'compact' %}size-mismatch{% endif %}">
+                                {{ spot_data.car_size.upper() if spot_data else 'UNKNOWN' }}
+                                {% if spot_data and spot_data.car_size not in ['small'] and spot.type == 'compact' %}
+                                    <span class="mismatch-warning">(⚠️ Too big!)</span>
+                                {% endif %}
+                            </div>
+                            <div class="duration">
+                                Parked for {{ spot_data.duration_minutes if spot_data else '0' }} minutes
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="spot-info">
+                            <div class="text-success">AVAILABLE</div>
+                            <div class="text-muted mt-1" style="font-size: 10px;">
+                                {% if spot.type == 'compact' %}
+                                    Small cars only
+                                {% elif spot.type == 'standard' %}
+                                    Small/Medium cars
+                                {% elif spot.type == 'oversized' %}
+                                    All sizes
+                                {% else %}
+                                    Small/Medium EVs
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
