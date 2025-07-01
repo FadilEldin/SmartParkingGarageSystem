@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify  # Added jsonify here
+from flask import Flask, render_template, request, jsonify
 from models import Garage, get_db, SpotType
 from services import ParkingService
 import os

@@ -8,7 +8,6 @@ db = get_db()
 
 class ParkingService:
     @staticmethod
-    @staticmethod
     def get_all_spots():
         # Get all spots
         spots = list(db.floors.aggregate([
