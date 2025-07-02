@@ -1,3 +1,9 @@
+# ######################################################################################
+# Fadil Eldin
+# July 1 2025
+# Smart Garage Parking System
+# ######################################################################################
+
 from flask import Flask, render_template, request, jsonify
 from models import Garage, get_db, SpotType
 from services import ParkingService
@@ -10,11 +16,11 @@ db = get_db()
 
 # Initialize garage
 Garage.initialize()
-
+# ----------------------------------------------------------------------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
-
+# ----------------------------------------------------------------------------------------
 
 @app.route('/v1/api/spots', methods=['GET'])
 def get_spots():
@@ -51,7 +57,7 @@ def get_spots():
         return jsonify(spots)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
+# ----------------------------------------------------------------------------------------
 @app.route('/v1/api/spots/available', methods=['GET'])
 def get_available_spots():
     spot_type_str = request.args.get('type')
@@ -62,29 +68,29 @@ def get_available_spots():
         except ValueError:
             return jsonify({"error": f"Invalid spot type: {spot_type_str}"}), 400
     return ParkingService.get_available_spots(spot_type)
-
+# ----------------------------------------------------------------------------------------
 @app.route('/v1/api/cars/park', methods=['POST'])
 def park_car():
     data = request.json
     return ParkingService.park_car(data['license_plate'], data['car_size'])
-
+# ----------------------------------------------------------------------------------------
 @app.route('/v1/api/cars/exit', methods=['POST'])
 def exit_car():
     data = request.json
     return ParkingService.exit_car(data['license_plate'])
-
+# ----------------------------------------------------------------------------------------
 @app.route('/v1/api/cars/find', methods=['GET'])
 def find_car():
     license_plate = request.args.get('license_plate')
     return ParkingService.find_car(license_plate)
-
+# ----------------------------------------------------------------------------------------
 @app.route('/oldfloor/<int:floor_number>')
 def old_show_floor(floor_number):
     floor = db.floors.find_one({"floor_number": floor_number}, {"_id": 0})
     if not floor:
         return "Floor not found", 404
     return render_template('floor.html', floor=floor)
-
+# ----------------------------------------------------------------------------------------
 
 @app.route('/floor/<int:floor_number>')
 def show_floor(floor_number):
@@ -116,6 +122,7 @@ def show_floor(floor_number):
         floor=floor,
         occupied_spots={s['spot_id']: s for s in occupied_spots}
     )
-
+# ----------------------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3333, debug=True)
+# -----------------------------------END--------------------------------------------------

@@ -1,3 +1,8 @@
+# ######################################################################################
+# Fadil Eldin
+# July 1 2025
+# Smart Garage Parking System
+# ######################################################################################
 from datetime import datetime
 from enum import Enum
 from pymongo import MongoClient
@@ -7,6 +12,7 @@ import os
 client = MongoClient(os.getenv('MONGO_URI', 'mongodb://localhost:27017/'))
 db = client.parking_garage
 
+# ----------------------------------------------------------------------------------------
 def get_db():
     return db
 
@@ -26,7 +32,7 @@ class SpotType(Enum):
             SpotType.EV_CHARGING: [CarSize.SMALL, CarSize.MEDIUM]  # Assuming EV spots are standard size
         }[self]
 
-
+# ----------------------------------------------------------------------------------------
 class CarSize(Enum):
     SMALL = "small"  # Fits in compact, standard, oversized
     MEDIUM = "medium"  # Fits in standard, oversized
@@ -36,7 +42,7 @@ class CarSize(Enum):
 client = MongoClient(os.getenv('MONGO_URI', 'mongodb://localhost:27017/'))
 db = client.parking_garage
 
-
+# ----------------------------------------------------------------------------------------
 class Garage:
     @staticmethod
     def initialize():
@@ -84,7 +90,7 @@ class Garage:
             ]
             db.floors.insert_many(floors)
 
-
+# ----------------------------------------------------------------------------------------
 class ParkingSpot:
     @staticmethod
     def find_available(spot_type=None):
@@ -105,7 +111,7 @@ class ParkingSpot:
             }}
         ])
 
-
+# ----------------------------------------------------------------------------------------
 class Car:
     @staticmethod
     def check_in(license_plate, spot_id, car_size):
@@ -180,3 +186,4 @@ class Car:
             "rate": rate,
             "calculation": calculation
         }
+# ----------------------------------------------------------------------------------------

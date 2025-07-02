@@ -1,3 +1,8 @@
+# ######################################################################################
+# Fadil Eldin
+# July 1 2025
+# Smart Garage Parking System
+# ######################################################################################
 from flask import jsonify
 from datetime import datetime
 from models import ParkingSpot, Car, CarSize, SpotType, get_db
@@ -5,7 +10,7 @@ from bson import ObjectId
 
 # Initialize database connection
 db = get_db()
-
+# ----------------------------------------------------------------------------------------
 class ParkingService:
     @staticmethod
     def get_all_spots():
@@ -163,3 +168,4 @@ class ParkingService:
 
         except Exception as e:
             return jsonify({"error": f"System error: {str(e)}"}), 500
+# ----------------------------------------------------------------------------------------

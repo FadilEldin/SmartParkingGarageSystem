@@ -1,3 +1,8 @@
+/* ######################################################################################
+# Fadil Eldin
+# July 1 2025
+# Smart Garage Parking System
+# #####################################################################################*/
 // Load floors for visualization dropdown
 function loadFloors() {
     fetch('/v1/api/spots')
