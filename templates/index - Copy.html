@@ -47,16 +47,11 @@
 
             <!-- Exit Controls -->
             <div class="col-md-6">
-                <!-- DRAG AND DROP EXIT -->
                 <div class="card mb-4">
-                   <div class="card-header bg-danger text-white">
+                    <div class="card-header bg-danger text-white">
                         <h3>Exit Garage</h3>
                     </div>
                     <div class="card-body">
-                        <div id="exitDropZone">
-                            <h5>Drop car here to exit</h5>
-                            <span>Drag a license text from the Occupied Spots section and drop here</span>
-                        </div>
                         <form id="exitForm">
                             <div class="mb-3">
                                 <label for="exitLicensePlate" class="form-label">License Plate</label>
@@ -64,10 +59,13 @@
                             </div>
                             <button type="submit" class="btn btn-danger">Exit Garage</button>
                         </form>
-                        <div id="exitDetails" class="mt-3" style="display: none;"></div>
+                        <div id="exitDetails" class="mt-3" style="display: none;">
+                            <h5>Parking Details</h5>
+                            <p>Duration: <span id="duration"></span> hours</p>
+                            <p>Fee: $<span id="fee"></span></p>
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
 

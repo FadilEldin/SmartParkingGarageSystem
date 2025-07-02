@@ -41,3 +41,50 @@ body {
     color: #ff0000;
     font-size: 10px;
 }
+
+.receipt {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 10px;
+}
+/* Add these to your styles.css */
+.occupied-spot {
+    cursor: grab;
+}
+
+.occupied-spot.dragging {
+    opacity: 0.5;
+}
+
+/* Add these to your styles.css */
+.draggable-spot {
+    cursor: grab;
+    user-select: none;
+}
+
+.draggable-spot:active {
+    cursor: grabbing;
+}
+
+.draggable-spot.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+#exitDropZone {
+    border: 2px dashed #dc3545;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: rgba(220, 53, 69, 0.05);
+    transition: all 0.3s;
+}
+
+#exitDropZone.drop-ready {
+    background-color: rgba(220, 53, 69, 0.2);
+    transform: scale(1.02);
+}

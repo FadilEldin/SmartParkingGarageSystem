@@ -3,134 +3,6 @@
 # July 1 2025
 # Smart Garage Parking System
 # #####################################################################################*/
-
-// Add these at the top of your script
-let draggedSpotId = null;
-
-function setupDragAndDrop() {
-    // Make occupied spots draggable
-    document.addEventListener('dragstart', function(e) {
-        if (e.target.closest('.draggable-spot')) {
-            const spotElement = e.target.closest('.draggable-spot');
-            e.dataTransfer.setData('text/plain', spotElement.dataset.licensePlate);
-            spotElement.classList.add('dragging');
-            e.dataTransfer.setDragImage(spotElement, 0, 0);
-        }
-    });
-
-    document.addEventListener('dragend', function(e) {
-        if (e.target.closest('.draggable-spot')) {
-            e.target.closest('.draggable-spot').classList.remove('dragging');
-        }
-    });
-
-    // Exit drop zone handling
-    const exitDropZone = document.getElementById('exitDropZone');
-
-    exitDropZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.classList.add('drop-ready');
-    });
-
-    exitDropZone.addEventListener('dragleave', function() {
-        this.classList.remove('drop-ready');
-    });
-
-    exitDropZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.classList.remove('drop-ready');
-
-        const licensePlate = e.dataTransfer.getData('text/plain');
-        if (licensePlate) {
-            // Fill the exit form and submit it
-            document.getElementById('exitLicensePlate').value = licensePlate;
-            document.getElementById('exitForm').dispatchEvent(new Event('submit'));
-        }
-    });
-}
-
-function renderSpots(containerId, spots) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-
-    if (spots.length === 0) {
-        container.innerHTML = '<p>No spots found</p>';
-        return;
-    }
-
-        spots.forEach(spot => {
-        const spotEl = document.createElement('div');
-        spotEl.className = `col-md-4 mb-3 ${spot.status === 'occupied' ? 'draggable-spot' : ''}`;
-        spotEl.dataset.spotId = spot.spot_id;
-        spotEl.draggable = spot.status === 'occupied';
-
-        // Add license plate to parent element's dataset
-        if (spot.status === 'occupied' && spot.license_plate) {
-            spotEl.dataset.licensePlate = spot.license_plate;
-        }
-
-        let spotContent = `
-            <div class="card ${spot.status === 'available' ? 'bg-light' : 'bg-warning'}">
-                <div class="card-body">
-                    <h5 class="card-title">${spot.spot_id}</h5>
-                    <p class="card-text">
-                        Floor ${spot.floor}, Bay ${spot.bay}<br>
-                        Type: ${spot.type}<br>
-                        Status: <span class="badge ${spot.status === 'available' ? 'bg-success' : 'bg-danger'}">
-                            ${spot.status}
-                        </span>
-        `;
-
-        if (spot.status === 'occupied' && spot.license_plate) {
-            spotContent += `
-                <br>License: <span class="license-plate">${spot.license_plate}</span>
-                <br>Parked: ${spot.duration_minutes} minutes
-            `;
-        }
-
-        spotContent += `
-                    </p>
-                </div>
-            </div>
-        `;
-
-        spotEl.innerHTML = spotContent;
-        container.appendChild(spotEl);
-    });
-}
-// Helper function to show exit receipt
-function showExitReceipt(data) {
-    const exitDetails = document.getElementById('exitDetails');
-    exitDetails.innerHTML = `
-        <h5>Parking Details</h5>
-        <div class="receipt">
-            <div>License: ${data.license_plate}</div>
-            <div>Duration: ${formatHMS(data.duration_seconds)}</div>
-            <div>Fee: $${data.fee.toFixed(2)}</div>
-        </div>
-    `;
-    exitDetails.style.display = 'block';
-}
-
-// Helper function to format duration
-function formatHMS(seconds) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-    return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-}
-
-
-
-
-
-
-
-
-//*************************************************************************************************************************
-// OLD
-
-
 // Load floors for visualization dropdown
 function loadFloors() {
     fetch('/v1/api/spots')
@@ -161,9 +33,7 @@ document.getElementById('visualizeBtn').addEventListener('click', function() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    loadFloors();
-    setupDragAndDrop();
-
+    loadFloors()
     // Park Car Form
     document.getElementById('parkForm').addEventListener('submit', function(e) {
         e.preventDefault();
